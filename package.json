@@ -1,0 +1,23 @@
+{
+  "name": "pretty-linter",
+  "version": "1.0.1",
+  "description": "A script to setup prettier & eslint in your project",
+  "bin": {
+    "setup-prettier": "./pretty-linter.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node pretty-linter.js"
+  },
+  "keywords": [
+    "prettier",
+    "setup",
+    "configuration"
+  ],
+  "author": {
+    "name": "Pavitar Singh",
+    "url": "https://github.com/Pavitar01"
+  },
+  "license": "ISC",
+  "type": "commonjs"
+}
