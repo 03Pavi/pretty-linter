@@ -1,6 +1,6 @@
 {
   "name": "pretty-linter",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A script to setup prettier & eslint in your project",
   "bin": {
     "setup-prettier": "./pretty-linter.js"

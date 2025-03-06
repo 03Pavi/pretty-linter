@@ -119,56 +119,57 @@ if (isGitRepo) {
   });
 
   rl.question(
-    "🛠️  Choose an option:\n1️⃣  Format only modified & newly added files\n2️⃣  Format all files under `src/`\nEnter your choice (1 or 2): ",
+    "🛠️  Choose an option:\n" +
+      "1️⃣  Format only modified & newly added files\n" +
+      "2️⃣  Format all files under `src/`\n" +
+      "3️⃣  Format only newly added files\n" +
+      "Enter your choice (1, 2, or 3): ",
     (answer) => {
-      if (answer === "1") {
-        console.log("🔍 Checking for modified and newly added files...");
+      if (answer === "1" || answer === "3") {
+        const diffFilter = answer === "1" ? "ACM" : "A";
+        console.log(
+          answer === "1"
+            ? "🔍 Checking for modified and newly added files..."
+            : "🔍 Checking for newly added files..."
+        );
+  
         try {
-          const modifiedFiles = execSync(
-            "git diff --cached --name-only --diff-filter=ACM",
-            { encoding: "utf8" }
-          )
+          const files = execSync(`git diff --cached --name-only --diff-filter=${diffFilter}`, {
+            encoding: "utf8",
+          })
             .split("\n")
             .filter((file) => file.match(/\.(js|ts|tsx|jsx)$/));
-
-          if (modifiedFiles.length > 0) {
-            console.log("🖌 Formatting modified files and sorting imports...");
-            execSync(`npx prettier --write ${modifiedFiles.join(" ")}`, {
-              stdio: "inherit",
-            });
-
+  
+          if (files.length > 0) {
+            console.log("🖌 Formatting files and sorting imports...");
+            execSync(`npx prettier --write ${files.join(" ")}`, { stdio: "inherit" });
+  
             console.log("✅ Staging formatted files...");
-            execSync(`git add ${modifiedFiles.join(" ")}`, {
-              stdio: "inherit",
-            });
-
+            execSync(`git add ${files.join(" ")}`, { stdio: "inherit" });
+  
             console.log("🚀 Prettier formatting and import sorting complete!");
           } else {
-            console.log(
-              "✅ No modified JavaScript/TypeScript files to format."
-            );
+            console.log("✅ No matching files to format.");
           }
         } catch (error) {
           console.error("❌ Error formatting files:", error.message);
         }
       } else if (answer === "2") {
-        console.log(
-          "🖌 Formatting all files under `src/` and sorting imports..."
-        );
+        console.log("🖌 Formatting all files under `src/` and sorting imports...");
         try {
-          execSync(
-            `npx prettier --config ${prettierConfigPath} --write "${targetPath}/**/*.{js,ts,tsx,jsx}"`,
-            { stdio: "inherit" }
-          );
+          execSync(`npx prettier --write "src/**/*.{js,ts,tsx,jsx}"`, {
+            stdio: "inherit",
+          });
           console.log("✅ Formatting and import sorting complete!");
         } catch (error) {
           console.error("❌ Error formatting files:", error.message);
         }
       } else {
-        console.log("❌ Invalid choice! Please enter 1 or 2.");
+        console.log("❌ Invalid choice! Please enter 1, 2, or 3.");
       }
-
+  
       rl.close();
     }
   );
+  
 }
